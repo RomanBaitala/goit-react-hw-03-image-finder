@@ -1,9 +1,10 @@
 import { PureComponent } from 'react';
 import { fetchData } from 'components/api/api';
 import { GalleyItem } from './GalleyItem/galleryItem';
-import { GalleryList } from './galleryImages.styled';
+import { GalleryList, NotFound } from './galleryImages.styled';
 import { ButtonMore } from 'components/Button/buttonMore';
 import { Loader } from 'components/Loader/loader';
+import { toast } from 'react-toastify';
 
 export class GalleryImages extends PureComponent {
   state = {
@@ -24,22 +25,30 @@ export class GalleryImages extends PureComponent {
       this.setState({ status: 'pending', page: 1 });
       fetchData(this.props.query)
         .then(({ data }) => {
-          this.setState(prevState => ({
-            data: data.hits,
-            status: 'resolved',
-            totalHits: data.totalHits,
-          }));
+          if (data.totalHits === 0) {
+            this.setState({ status: 'rejected' });
+          } else {
+            this.setState(prevState => ({
+              data: data.hits,
+              status: 'resolved',
+              totalHits: data.totalHits,
+            }));
+          }
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
     if (prevState.page !== this.state.page) {
       fetchData(this.props.query, this.state.page)
         .then(({ data }) => {
-          this.setState(prevState => ({
-            data: [...prevState.data, ...data.hits],
-            status: 'resolved',
-            totalHits: data.totalHits,
-          }));
+          if (data.totalHits === 0) {
+            this.setState({ status: 'rejected' });
+          } else {
+            this.setState(prevState => ({
+              data: [...prevState.data, ...data.hits],
+              status: 'resolved',
+              totalHits: data.totalHits,
+            }));
+          }
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
@@ -60,7 +69,7 @@ export class GalleryImages extends PureComponent {
     }
 
     if (status === 'rejected') {
-      return <h1>Not found</h1>;
+      return <NotFound>Not found😢🐷</NotFound>;
     }
 
     if (status === 'resolved') {

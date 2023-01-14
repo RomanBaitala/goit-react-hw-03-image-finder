@@ -14,7 +14,7 @@ export class Searchbar extends PureComponent {
   handleSubmit = evt => {
     evt.preventDefault();
     if (this.state.query.trim() === '') {
-      toast.error('Nothing to search😉', {
+      toast.error('Nothing to search😉🐷', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,

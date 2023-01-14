@@ -12,3 +12,10 @@ export const GalleryList = styled('ul')`
   margin-left: auto;
   margin-right: auto;
 `;
+
+export const NotFound = styled('h1')`
+  text-align: center;
+  font-weight: 700;
+  font-style: 32px;
+  line-height: 38px;
+`;
