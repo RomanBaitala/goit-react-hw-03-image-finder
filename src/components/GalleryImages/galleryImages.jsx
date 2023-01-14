@@ -45,7 +45,7 @@ export class GalleryImages extends PureComponent {
     }
   }
   lastPage = (page, res) => {
-    if (this.state.totalHits <= 12) {
+    if (Math.ceil(res / 12) === page) {
       return true;
     }
   };
