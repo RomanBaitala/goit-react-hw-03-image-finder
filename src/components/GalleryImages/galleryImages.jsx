@@ -4,7 +4,6 @@ import { GalleyItem } from './GalleyItem/galleryItem';
 import { GalleryList, NotFound } from './galleryImages.styled';
 import { ButtonMore } from 'components/Button/buttonMore';
 import { Loader } from 'components/Loader/loader';
-import { toast } from 'react-toastify';
 
 export class GalleryImages extends PureComponent {
   state = {
@@ -27,13 +26,12 @@ export class GalleryImages extends PureComponent {
         .then(({ data }) => {
           if (data.totalHits === 0) {
             this.setState({ status: 'rejected' });
-          } else {
-            this.setState(prevState => ({
-              data: data.hits,
-              status: 'resolved',
-              totalHits: data.totalHits,
-            }));
           }
+          this.setState(prevState => ({
+            data: data.hits,
+            status: 'resolved',
+            totalHits: data.totalHits,
+          }));
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
@@ -42,13 +40,12 @@ export class GalleryImages extends PureComponent {
         .then(({ data }) => {
           if (data.totalHits === 0) {
             this.setState({ status: 'rejected' });
-          } else {
-            this.setState(prevState => ({
-              data: [...prevState.data, ...data.hits],
-              status: 'resolved',
-              totalHits: data.totalHits,
-            }));
           }
+          this.setState(prevState => ({
+            data: [...prevState.data, ...data.hits],
+            status: 'resolved',
+            totalHits: data.totalHits,
+          }));
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
