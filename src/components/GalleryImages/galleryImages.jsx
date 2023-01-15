@@ -24,28 +24,28 @@ export class GalleryImages extends PureComponent {
       this.setState({ status: 'pending', page: 1 });
       fetchData(this.props.query)
         .then(({ data }) => {
-          if (data.totalHits === 0) {
-            this.setState({ status: 'rejected' });
-          }
           this.setState(prevState => ({
             data: data.hits,
             status: 'resolved',
             totalHits: data.totalHits,
           }));
+          if (data.totalHits === 0) {
+            this.setState({ status: 'rejected' });
+          }
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
     if (prevState.page !== this.state.page) {
       fetchData(this.props.query, this.state.page)
         .then(({ data }) => {
-          if (data.totalHits === 0) {
-            this.setState({ status: 'rejected' });
-          }
           this.setState(prevState => ({
             data: [...prevState.data, ...data.hits],
             status: 'resolved',
             totalHits: data.totalHits,
           }));
+          if (data.totalHits === 0) {
+            this.setState({ status: 'rejected' });
+          }
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
