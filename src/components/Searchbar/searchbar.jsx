@@ -34,7 +34,7 @@ export class Searchbar extends PureComponent {
       <>
         <SearchBar>
           <SearchForm onSubmit={this.handleSubmit}>
-            <ButtonSearch></ButtonSearch>
+            <ButtonSearch />
             <InputValue
               onChange={this.handleQueryChange}
               value={this.state.query}

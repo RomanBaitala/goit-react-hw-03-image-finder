@@ -24,8 +24,8 @@ export class Modal extends PureComponent {
       <>
         <Overlay onClick={this.handleBackdrop}>
           <ModalS>
-            <ExitCross size="24px" onClick={onClose}></ExitCross>
-            <img src={largeImageURL} alt=""></img>
+            <ExitCross size="24px" onClick={onClose} />
+            <img src={largeImageURL} alt="" />
           </ModalS>
         </Overlay>
       </>

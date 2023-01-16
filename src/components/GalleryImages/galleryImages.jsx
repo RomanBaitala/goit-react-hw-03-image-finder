@@ -1,5 +1,5 @@
 import { PureComponent } from 'react';
-import { fetchData } from 'components/api/api';
+import { fetchData } from 'api/api';
 import { GalleyItem } from './GalleyItem/galleryItem';
 import { GalleryList, NotFound } from './galleryImages.styled';
 import { ButtonMore } from 'components/Button/buttonMore';
@@ -9,12 +9,11 @@ export class GalleryImages extends PureComponent {
   state = {
     data: [],
     error: null,
-    page: 1,
     totalHits: null,
+    page: 1,
     status: 'idle',
   };
   loadMore = evt => {
-    evt.preventDefault();
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
@@ -52,7 +51,7 @@ export class GalleryImages extends PureComponent {
   }
   lastPage = (page, res) => {
     if (Math.ceil(res / 12) === page) {
-      return true;
+      return Math.ceil(res / 12);
     }
   };
   render() {
@@ -62,7 +61,7 @@ export class GalleryImages extends PureComponent {
     }
 
     if (status === 'pending') {
-      return <Loader></Loader>;
+      return <Loader />;
     }
 
     if (status === 'rejected') {
@@ -78,13 +77,13 @@ export class GalleryImages extends PureComponent {
                 key={id}
                 webformatURL={webformatURL}
                 largeImageURL={largeImageURL}
-              ></GalleyItem>
+              />
             ))}
           </GalleryList>
-          {this.lastPage(page, totalHits) === true ? (
+          {this.lastPage(page, totalHits) === page ? (
             ''
           ) : (
-            <ButtonMore onClick={this.loadMore}></ButtonMore>
+            <ButtonMore onClick={this.loadMore} />
           )}
         </>
       );

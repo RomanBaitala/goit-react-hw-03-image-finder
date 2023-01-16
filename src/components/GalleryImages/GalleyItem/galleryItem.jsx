@@ -17,10 +17,7 @@ export class GalleyItem extends PureComponent {
           <GalleryImageG src={webformatURL} alt="" />
         </GalleryItemG>
         {this.state.modal && (
-          <Modal
-            largeImageURL={largeImageURL}
-            onClose={this.toggleModal}
-          ></Modal>
+          <Modal largeImageURL={largeImageURL} onClose={this.toggleModal} />
         )}
       </>
     );
