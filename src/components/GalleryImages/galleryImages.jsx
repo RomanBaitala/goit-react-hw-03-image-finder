@@ -11,82 +11,87 @@ export class GalleryImages extends PureComponent {
     error: null,
     totalHits: null,
     page: 1,
-    status: 'idle',
+    status: false,
+    isLoading: false,
+    buttonMore: false,
   };
+
   loadMore = evt => {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
   };
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.query !== this.props.query) {
-      this.setState({ status: 'pending', page: 1 });
+      this.setState({ isLoading: true, page: 1 });
       fetchData(this.props.query)
         .then(({ data }) => {
           this.setState(prevState => ({
             data: data.hits,
-            status: 'resolved',
+            isLoading: false,
+            status: false,
+            buttonMore: true,
             totalHits: data.totalHits,
           }));
           if (data.totalHits === 0) {
-            this.setState({ status: 'rejected' });
+            this.setState({ status: true, buttonMore: false });
           }
         })
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => this.setState({ error, status: true }));
     }
+
     if (prevState.page !== this.state.page) {
       fetchData(this.props.query, this.state.page)
         .then(({ data }) => {
           this.setState(prevState => ({
             data: [...prevState.data, ...data.hits],
-            status: 'resolved',
+            status: false,
+            buttonMore: true,
             totalHits: data.totalHits,
           }));
           if (data.totalHits === 0) {
-            this.setState({ status: 'rejected' });
+            this.setState({
+              status: true,
+              buttonMore: false,
+            });
           }
         })
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => this.setState({ error, status: true }));
+    }
+
+    if (
+      this.state.data.length !== 0 &&
+      !this.state.buttonMore &&
+      this.state.data.length < this.state.totalHits
+    ) {
+      this.setState({ buttonMore: true });
+    } else if (
+      this.state.data.length >= this.state.totalHits &&
+      this.state.buttonMore
+    ) {
+      this.setState({ buttonMore: false });
     }
   }
-  lastPage = (page, res) => {
-    if (Math.ceil(res / 12) === page) {
-      return Math.ceil(res / 12);
-    }
-  };
+
   render() {
-    const { status, page, totalHits } = this.state;
-    if (status === 'idle') {
-      return;
-    }
+    const { status, isLoading, buttonMore } = this.state;
 
-    if (status === 'pending') {
-      return <Loader />;
-    }
-
-    if (status === 'rejected') {
-      return <NotFound>Not found😢🐷</NotFound>;
-    }
-
-    if (status === 'resolved') {
-      return (
-        <>
-          <GalleryList>
-            {this.state.data.map(({ id, webformatURL, largeImageURL }) => (
-              <GalleyItem
-                key={id}
-                webformatURL={webformatURL}
-                largeImageURL={largeImageURL}
-              />
-            ))}
-          </GalleryList>
-          {this.lastPage(page, totalHits) === page ? (
-            ''
-          ) : (
-            <ButtonMore onClick={this.loadMore} />
-          )}
-        </>
-      );
-    }
+    return (
+      <>
+        <GalleryList>
+          {this.state.data.map(({ id, webformatURL, largeImageURL }) => (
+            <GalleyItem
+              key={id}
+              webformatURL={webformatURL}
+              largeImageURL={largeImageURL}
+            />
+          ))}
+        </GalleryList>
+        {buttonMore ? <ButtonMore onClick={this.loadMore} /> : ''}
+        {status ? <NotFound>Not found😢🐷</NotFound> : ''}
+        {isLoading ? <Loader /> : ''}
+      </>
+    );
   }
 }

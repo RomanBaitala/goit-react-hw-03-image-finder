@@ -8,9 +8,11 @@ export class Searchbar extends PureComponent {
   state = {
     query: '',
   };
+
   handleQueryChange = evt => {
     this.setState({ query: evt.currentTarget.value.toLowerCase() });
   };
+
   handleSubmit = evt => {
     evt.preventDefault();
     if (this.state.query.trim() === '') {
@@ -29,6 +31,7 @@ export class Searchbar extends PureComponent {
     this.props.onSubmit(this.state.query);
     this.setState({ query: '' });
   };
+
   render() {
     return (
       <>

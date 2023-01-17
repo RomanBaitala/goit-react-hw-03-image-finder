@@ -8,9 +8,11 @@ export class App extends PureComponent {
   state = {
     query: '',
   };
+
   handleFormSubmit = query => {
     this.setState({ query });
   };
+
   render() {
     const { query } = this.state;
     return (

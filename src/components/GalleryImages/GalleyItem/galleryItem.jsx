@@ -6,9 +6,11 @@ export class GalleyItem extends PureComponent {
   state = {
     modal: false,
   };
+
   toggleModal = () => {
     this.setState(({ modal }) => ({ modal: !modal }));
   };
+  
   render() {
     const { id, webformatURL, largeImageURL } = this.props;
     return (
